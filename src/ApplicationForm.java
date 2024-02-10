@@ -1,14 +1,12 @@
 import java.awt.*;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 class ApplicationForm extends JFrame{
 
     private JLabel bankName;
-    private JLabel name, dob, Address, street, city, Zipcode;
-    private JTextField nameInput, dobInput, AddressInput, streetInput, cityInput, ZipCodeInput;
+    private JLabel name, Mobile, Email, AccType, InitialDeposite;
+    private JTextField nameInput, MobileInput, EmailInput, InitialDepositeInput;
+    private JRadioButton male, female;
 
     ApplicationForm()
     {
@@ -29,55 +27,50 @@ class ApplicationForm extends JFrame{
         nameInput.setBounds(665, 150, 325, 30);
         add(nameInput);
 
-        dob = new JLabel("Date of Birth: ");
-        dob.setForeground(Color.WHITE);
-        dob.setFont(new Font("Arial", Font.PLAIN, 28));
-        dob.setBounds(500, 200, 200, 30);
-        add(dob);
+        Mobile = new JLabel("Mobile No.: ");
+        Mobile.setForeground(Color.WHITE);
+        Mobile.setFont(new Font("Arial", Font.PLAIN, 28));
+        Mobile.setBounds(521, 200, 200, 30);
+        add(Mobile);
 
-        dobInput = new JTextField();
-        dobInput.setBounds(665, 200, 325, 30);
-        add(dobInput);
+        MobileInput = new JTextField();
+        MobileInput.setBounds(665, 200, 325, 30);
+        add(MobileInput);
 
-        Address = new JLabel("Address: ");
-        Address.setForeground(Color.WHITE);
-        Address.setFont(new Font("Arial", Font.PLAIN, 28));
-        Address.setBounds(500, 250, 200, 30);
-        add(Address);
+        Email = new JLabel("Email: ");
+        Email.setForeground(Color.WHITE);
+        Email.setFont(new Font("Arial", Font.PLAIN, 28));
+        Email.setBounds(584, 250, 200, 30);
+        add(Email);
 
-        AddressInput = new JTextField();
-        AddressInput.setBounds(665, 250 ,325, 30);
-        add(AddressInput);
+        EmailInput = new JTextField();
+        EmailInput.setBounds(665, 250 ,325, 30);
+        add(EmailInput);
 
-        street = new JLabel("Street: ");
-        street.setForeground(Color.WHITE);
-        street.setFont(new Font("Arial", Font.PLAIN, 28));
-        street.setBounds(500, 300, 200, 30);
-        add(street);
+        AccType = new JLabel("Account Type: ");
+        AccType.setForeground(Color.WHITE);
+        AccType.setFont(new Font("Arial", Font.PLAIN, 28));
+        AccType.setBounds(483, 300, 200, 30);
+        add(AccType);
 
-        streetInput = new JTextField();
-        streetInput.setBounds(665, 300, 325, 30);
-        add(streetInput);
+        male = new JRadioButton("Male");
+        female = new JRadioButton("Female");
+        ButtonGroup genderGroup = new ButtonGroup();
+        genderGroup.add(male);
+        genderGroup.add(female);
+        add(male);
+        add(female);
 
-        city = new JLabel("City: ");
-        city.setForeground(Color.WHITE);
-        city.setFont(new Font("Arial", Font.PLAIN, 28));
-        city.setBounds(500, 350, 200, 30);
-        add(city);
 
-        cityInput = new JTextField();
-        cityInput.setBounds(665, 350, 325, 30);
-        add(cityInput);
+        InitialDeposite = new JLabel("Initial Deposite: ");
+        InitialDeposite.setForeground(Color.WHITE);
+        InitialDeposite.setFont(new Font("Arial", Font.PLAIN, 28));
+        InitialDeposite.setBounds(470, 350, 200, 30);
+        add(InitialDeposite);
 
-        Zipcode = new JLabel("ZipCode: ");
-        Zipcode.setForeground(Color.WHITE);
-        Zipcode.setFont(new Font("Arial", Font.PLAIN, 28));
-        Zipcode.setBounds(500, 400, 200, 30);
-        add(Zipcode);
-
-        ZipCodeInput = new JTextField();
-        ZipCodeInput.setBounds(665, 400, 325, 30);
-        add(ZipCodeInput);
+        InitialDepositeInput = new JTextField();
+        InitialDepositeInput.setBounds(665, 350, 325, 30);
+        add(InitialDepositeInput);
 
         // Setting up the background Image
         ImageIcon backgroundImage = new ImageIcon("//media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/Images/Login_BackGround2.jpg");
@@ -91,8 +84,12 @@ class ApplicationForm extends JFrame{
         setLayout(null);
         setSize(1000, 650);
         setLocation(380, 150);
-        // setUndecorated(true);
+        setUndecorated(true);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+    public static void main(String[] args) {
+        new ApplicationForm();
+    }
+    
 }

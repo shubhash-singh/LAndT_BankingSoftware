@@ -23,10 +23,10 @@ class LoginPage extends JFrame implements ActionListener{
         add(bankName);
 
 
-        accountNo = new JLabel("Account No: ");
+        accountNo = new JLabel("Email Id: ");
         accountNo.setForeground(Color.WHITE);
         accountNo.setFont(new Font("Arial", Font.PLAIN, 28));
-        accountNo.setBounds(500, 150, 200, 30);
+        accountNo.setBounds(540, 150, 200, 30);
         add(accountNo);
 
 
@@ -82,7 +82,7 @@ class LoginPage extends JFrame implements ActionListener{
         setLayout(null);
         setSize(1000, 650);
         setLocation(380, 150);
-        // setUndecorated(true);
+        setUndecorated(true);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -95,6 +95,7 @@ class LoginPage extends JFrame implements ActionListener{
             if(ae.getSource() == signUp)
             {
                 new ApplicationForm();
+                
             }
 
             else if (ae.getSource() == logIn)
