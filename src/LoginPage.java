@@ -10,6 +10,7 @@ class LoginPage extends JFrame implements ActionListener{
     private JLabel accountNo, password;
     private JTextField accountNoInput;
     private JPasswordField passwordInput;
+    private String Login_Username, LoginPassword;
 
     LoginPage() 
     {
@@ -102,23 +103,29 @@ class LoginPage extends JFrame implements ActionListener{
             {
                 String id = accountNoInput.getText().toString();
                 String Password = passwordInput.getPassword().toString();
-                
+                LoginPassword = Password;
+                Login_Username = id;
 
-                if(id.isEmpty() || Password.isBlank())
-                {
+                if(id.isEmpty() || Password.isBlank() ) {
                     alertMsg.setText("Password");
                 }
-                else
-                {
+                else {
                     alertMsg.setText("UserName");
                 }
+                
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args) {
-        new LoginPage();
-
+    public String getUsername()
+    {
+        return Login_Username;
     }
+    public String getPassword(){
+        return LoginPassword;
+    }
+
+
 }

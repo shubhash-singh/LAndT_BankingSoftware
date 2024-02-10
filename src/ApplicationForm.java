@@ -1,8 +1,8 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.*;
+
 
 class ApplicationForm extends JFrame implements ActionListener{
 
@@ -95,7 +95,7 @@ class ApplicationForm extends JFrame implements ActionListener{
         Submit.setForeground(Color.WHITE);
         Submit.setBackground(Color.RED);
         Submit.setBorder(null);
-        Submit.setBounds(650, 450, 170, 40);
+        Submit.setBounds(550, 450, 150, 40);
         Submit.addActionListener(this); 
         add(Submit);
 
@@ -104,7 +104,7 @@ class ApplicationForm extends JFrame implements ActionListener{
         clear.setForeground(Color.WHITE);
         clear.setBackground(Color.RED);
         clear.setBorder(null);
-        clear.setBounds(650, 500, 170, 40);
+        clear.setBounds(720, 450, 150, 40);
         clear.addActionListener(this); 
         add(clear);
 
@@ -112,7 +112,7 @@ class ApplicationForm extends JFrame implements ActionListener{
         WarningMsg = new JLabel();
         WarningMsg.setFont(new Font("Monotype Corsiva", Font.ITALIC, 16));
         WarningMsg.setForeground(Color.RED);
-        WarningMsg.setBounds(getBounds());
+        WarningMsg.setBounds(600, 400, 500, 30);
         add(WarningMsg);
 
         // Setting up the background Image
@@ -127,7 +127,7 @@ class ApplicationForm extends JFrame implements ActionListener{
         setLayout(null);
         setSize(1000, 650);
         setLocation(380, 150);
-        setUndecorated(true);
+        // setUndecorated(true);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -138,17 +138,23 @@ class ApplicationForm extends JFrame implements ActionListener{
                 String Mobile_No = MobileInput.getText().toString();
                 String Email_Id = EmailInput.getText().toString();
                 String Initial_Deposite =InitialDepositeInput.getText().toString();
+                nameInput.setText("");
+                MobileInput .setText(""); 
+                EmailInput.setText("");
+                InitialDepositeInput.setText("");
+                WarningMsg.setText("");
 
-                if(Name.isBlank() || Mobile_No.isBlank() || Email_Id.isBlank()) {
 
+                if(Name.isBlank() || Mobile_No.isBlank() || Email_Id.isBlank() || Initial_Deposite.isBlank() ) {
+                    WarningMsg.setText("None of the fields should be empty");
                 }
-                else if(Integer.parseInt(Initial_Deposite) < 0 || Initial_Deposite.isBlank()) {
-
+                else if(Integer.parseInt(Initial_Deposite) < 1000 ) {
+                    WarningMsg.setText("Initial deposite must be greater than 1000");
                 }
             }
             else if (ae.getSource() == clear) {
                 nameInput.setText("");
-                MobileInput .setText("");
+                MobileInput .setText(""); 
                 EmailInput.setText("");
                 InitialDepositeInput.setText("");
             }
@@ -156,5 +162,7 @@ class ApplicationForm extends JFrame implements ActionListener{
             e.printStackTrace();
         }
     }
-    
+    public static void main(String[] args) {
+        new ApplicationForm();
+    }
 }
