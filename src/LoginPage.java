@@ -83,7 +83,7 @@ class LoginPage extends JFrame implements ActionListener{
         setLayout(null);
         setSize(1000, 650);
         setLocation(380, 150);
-        setUndecorated(true);
+        // setUndecorated(true);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -96,6 +96,7 @@ class LoginPage extends JFrame implements ActionListener{
             if(ae.getSource() == signUp)
             {
                 new ApplicationForm();
+                dispose(); // This line closes the login page 
                 
             }
 
@@ -106,11 +107,11 @@ class LoginPage extends JFrame implements ActionListener{
                 LoginPassword = Password;
                 Login_Username = id;
 
-                if(id.isEmpty() || Password.isBlank() ) {
-                    alertMsg.setText("Password");
+                if(id.isBlank() || Password.isBlank() ) {
+                    alertMsg.setText("Password can't be Empty");
                 }
                 else {
-                    alertMsg.setText("UserName");
+                    alertMsg.setText("UserName can't be Empty");
                 }
                 
 

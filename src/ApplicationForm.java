@@ -1,15 +1,23 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+
 import javax.swing.*;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 class ApplicationForm extends JFrame implements ActionListener{
 
     private JLabel bankName;
-    private JLabel name, Mobile, Email, AccType, InitialDeposite, WarningMsg;
-    private JTextField nameInput, MobileInput, EmailInput, InitialDepositeInput;
-    private JRadioButton current, saving;
+    private JLabel name, Mobile, Email, AccType, InitialDeposite, WarningMsg, password;
+    private JTextField nameInput, MobileInput, EmailInput, InitialDepositeInput, passwordInput;
+    private JComboBox<String> AccountType;
     private JButton Submit, clear;
 
     ApplicationForm()
@@ -63,21 +71,13 @@ class ApplicationForm extends JFrame implements ActionListener{
         AccType.setFont(new Font("Arial", Font.PLAIN, 28));
         AccType.setBounds(483, 300, 200, 30);
         add(AccType);
-        // RadioButton to select Account Type
-        current = new JRadioButton("Current");
-        saving = new JRadioButton("Saving");
-        current.setForeground(Color.BLACK);
-        saving.setForeground(Color.BLACK);
-        current.setFont(new Font("Arial", Font.PLAIN, 28));
-        saving.setFont(new Font("Arial",Font.PLAIN, 28 ));
-        current.setBounds(665, 300, 150, 30);
-        saving.setBounds(820, 300, 150, 30);
-        ButtonGroup genderGroup = new ButtonGroup();
-        genderGroup.add(current);
-        genderGroup.add(saving);
-        add(current);
-        add(saving);
-
+        // C to select Account Type
+        String[] genderOptions = {"Saving", "Current"};
+        AccountType = new JComboBox<>(genderOptions);
+        AccountType.setBounds(665, 300, 140, 30);
+        AccountType.setFont(new Font("Arial", Font.PLAIN, 20));
+        AccountType.setForeground(Color.BLACK);
+        add(AccountType);
 
         // Initial Deposite section 
         InitialDeposite = new JLabel("Initial Deposite: ");
@@ -90,12 +90,23 @@ class ApplicationForm extends JFrame implements ActionListener{
         InitialDepositeInput.setBounds(665, 350, 325, 30);
         add(InitialDepositeInput);
 
+        // Section to create password for further Login
+        password = new JLabel("Create Password");
+        password.setForeground(Color.WHITE);
+        password.setFont(new Font("Arial", Font.PLAIN, 28));
+        password.setBounds(470, 400, 200, 30);
+        add(password);
+
+        passwordInput = new JTextField();
+        passwordInput.setBounds(665, 400, 325, 30);
+        add(passwordInput);
+
         // Button to submit all the data to open a new Bank account
         Submit = new JButton("Submit");
         Submit.setForeground(Color.WHITE);
         Submit.setBackground(Color.RED);
         Submit.setBorder(null);
-        Submit.setBounds(550, 450, 150, 40);
+        Submit.setBounds(550, 500, 150, 40);
         Submit.addActionListener(this); 
         add(Submit);
 
@@ -104,7 +115,7 @@ class ApplicationForm extends JFrame implements ActionListener{
         clear.setForeground(Color.WHITE);
         clear.setBackground(Color.RED);
         clear.setBorder(null);
-        clear.setBounds(720, 450, 150, 40);
+        clear.setBounds(720, 500, 150, 40);
         clear.addActionListener(this); 
         add(clear);
 
@@ -112,7 +123,7 @@ class ApplicationForm extends JFrame implements ActionListener{
         WarningMsg = new JLabel();
         WarningMsg.setFont(new Font("Monotype Corsiva", Font.ITALIC, 16));
         WarningMsg.setForeground(Color.RED);
-        WarningMsg.setBounds(600, 400, 500, 30);
+        WarningMsg.setBounds(200, 250, 500, 300);
         add(WarningMsg);
 
         // Setting up the background Image
@@ -122,7 +133,6 @@ class ApplicationForm extends JFrame implements ActionListener{
         JLabel imagBack = new JLabel(backgrouIcon2);
         imagBack.setBounds(0, 0, 1000, 650);
         add(imagBack);
-
 
         setLayout(null);
         setSize(1000, 650);
@@ -134,32 +144,69 @@ class ApplicationForm extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent ae) {
         try {
             if(ae.getSource() == Submit) {
-                String Name = nameInput.getText().toString();
-                String Mobile_No = MobileInput.getText().toString();
-                String Email_Id = EmailInput.getText().toString();
-                String Initial_Deposite =InitialDepositeInput.getText().toString();
+                String Name_ = nameInput.getText().toString();
+                String MobileNo_ = MobileInput.getText().toString();
+                String Email_ = EmailInput.getText().toString();
+                String InitialDeposite_ =InitialDepositeInput.getText().toString();
+                String Password = passwordInput.getText().toString();
                 nameInput.setText("");
                 MobileInput .setText(""); 
                 EmailInput.setText("");
                 InitialDepositeInput.setText("");
                 WarningMsg.setText("");
+                passwordInput.setText("");
+                
+                String AccType_ = (String) AccountType.getSelectedItem();
 
-
-                if(Name.isBlank() || Mobile_No.isBlank() || Email_Id.isBlank() || Initial_Deposite.isBlank() ) {
+                String Account_No = "00100501227879";
+                if(Name_.isBlank() || MobileNo_.isBlank() || Email_.isBlank() || InitialDeposite_.isBlank() ) {
                     WarningMsg.setText("None of the fields should be empty");
                 }
-                else if(Integer.parseInt(Initial_Deposite) < 1000 ) {
+                else if(Integer.parseInt(InitialDeposite_) < 1000 ) {
                     WarningMsg.setText("Initial deposite must be greater than 1000");
                 }
+                WarningMsg.setText(Name_+"\t"+MobileNo_+"\t"+Email_+"\t"+InitialDeposite_+"\t"+Password+"\t"+Account_No+"\t"+AccType_);
+                // File excelFile = new File("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx");
+                try(XSSFWorkbook workbk = new XSSFWorkbook()) {
+                
+                XSSFSheet sheet = workbk.getSheetAt(0);
+                int rowIndex = 5;
+
+                for (Row row : sheet) {
+                    for (Cell cell : row) {
+                        if (cell.getCellType() != CellType.BLANK) {
+                            rowIndex++;
+                        }
+                    }
+                }
+                Row headerRow = sheet.createRow(rowIndex);
+                headerRow.createCell(0).setCellValue(Name_);
+                headerRow.createCell(1).setCellValue(Account_No);
+                headerRow.createCell(2).setCellValue(MobileNo_);
+                headerRow.createCell(3).setCellValue(Email_);
+                headerRow.createCell(4).setCellValue(Password);
+                headerRow.createCell(5).setCellValue(AccType_);
+                headerRow.createCell(6).setCellValue(InitialDeposite_);
+                headerRow.createCell(7).setCellValue(InitialDeposite_);
+
+                try (FileOutputStream fileOut = new FileOutputStream("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx")) {
+                    workbk.write(fileOut);
+                }
+               } catch (IOException e) {
+                    System.out.println(e);
+               }
+
+                
             }
             else if (ae.getSource() == clear) {
                 nameInput.setText("");
                 MobileInput .setText(""); 
                 EmailInput.setText("");
                 InitialDepositeInput.setText("");
+                passwordInput.setText("");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
     }
     public static void main(String[] args) {
