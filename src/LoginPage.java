@@ -1,5 +1,3 @@
-package BankingSoftware;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -73,7 +71,7 @@ class LoginPage extends JFrame implements ActionListener{
 
 
         // Setting up the background Image
-        ImageIcon backgroundImage = new ImageIcon("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/ProjectsIn2ndYear/BankingSoftware/Data/Images/Login_BackGround2.jpg");
+        ImageIcon backgroundImage = new ImageIcon("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/Images/Login_BackGround2.jpg");
         Image background = backgroundImage.getImage().getScaledInstance(1000, 650, Image.SCALE_DEFAULT);
         ImageIcon backgrouIcon2 =new ImageIcon(background);
         JLabel imagBack = new JLabel(backgrouIcon2);
@@ -84,7 +82,7 @@ class LoginPage extends JFrame implements ActionListener{
         setLayout(null);
         setSize(1000, 650);
         setLocation(380, 150);
-        setUndecorated(true);
+        // setUndecorated(true);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
