@@ -20,7 +20,7 @@ public class AccountDetail extends JFrame{
         imagBack.setBounds(0, 0, 1000, 650);
         add(imagBack); 
 
-
+        
 
         setLayout(null);
         setSize(1000, 650);

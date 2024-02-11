@@ -6,7 +6,6 @@ import java.io.*;
 import javax.swing.*;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -18,8 +17,8 @@ class ApplicationForm extends JFrame implements ActionListener{
     private JLabel name, Mobile, Email, AccType, InitialDeposite, WarningMsg, password;
     private JTextField nameInput, MobileInput, EmailInput, InitialDepositeInput, passwordInput;
     private JComboBox<String> AccountType;
-    private JButton Submit, clear;
-    private XSSFWorkbook workbk;
+    private JButton Submit, clear, logIn;
+    
 
     ApplicationForm()
     {
@@ -120,6 +119,15 @@ class ApplicationForm extends JFrame implements ActionListener{
         clear.addActionListener(this); 
         add(clear);
 
+        logIn = new JButton("Log In");
+        logIn.setForeground(Color.WHITE);
+        logIn.setBackground(Color.RED);
+        logIn.setBorder(null);
+        logIn.addActionListener(this);
+        logIn.setBounds(690, 330, 100, 40);
+        add(logIn);
+
+
         // Warning Message
         WarningMsg = new JLabel();
         WarningMsg.setFont(new Font("Monotype Corsiva", Font.ITALIC, 16));
@@ -159,48 +167,17 @@ class ApplicationForm extends JFrame implements ActionListener{
                 
                 String AccType_ = (String) AccountType.getSelectedItem();
 
-                String Account_No = generateAccountNumber();
-                if(Name_.isBlank() || MobileNo_.isBlank() || Email_.isBlank() || InitialDeposite_.isBlank() ) {
+                if(Name_.isBlank() || MobileNo_.isBlank() || Email_.isBlank() || InitialDeposite_.isBlank() || Password.isBlank()) {
                     WarningMsg.setText("None of the fields should be empty");
                 }
                 else if(Integer.parseInt(InitialDeposite_) < 1000 ) {
                     WarningMsg.setText("Initial deposite must be greater than 1000");
                 }
-                WarningMsg.setText(Name_+"\t"+MobileNo_+"\t"+Email_+"\t"+InitialDeposite_+"\t"+Password+"\t"+Account_No+"\t"+AccType_);
-                // File excelFile = new File("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx");
-                try{
-                    workbk = new XSSFWorkbook();
-                    XSSFSheet sheet = workbk.getSheetAt(0);
-                    int rowIndex = 5;
-
-                    for (Row row : sheet) {
-                        for (Cell cell : row) {
-                            if (cell.getCellType() != CellType.BLANK) {
-                                rowIndex++;
-                            }
-                        }
-                    }
-                    Row headerRow = sheet.createRow(rowIndex);
-                    headerRow.createCell(0).setCellValue(Name_);
-                    headerRow.createCell(1).setCellValue(Account_No);
-                    headerRow.createCell(2).setCellValue(MobileNo_);
-                    headerRow.createCell(3).setCellValue(Email_);
-                    headerRow.createCell(4).setCellValue(Password);
-                    headerRow.createCell(5).setCellValue(AccType_);
-                    headerRow.createCell(6).setCellValue(InitialDeposite_);
-                    headerRow.createCell(7).setCellValue(InitialDeposite_);
-
-                    try (FileOutputStream fileOut = new FileOutputStream("path/to/your/excel/file/UserDetail.xlsx")) {
-                        workbk.write(fileOut);
-                        workbk.close();
-
-                    } catch (IOException e) {
-                        JOptionPane.showMessageDialog(this, "Error writing to Excel file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                } catch(Exception e){
-                    JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                else{
+                    dataEntry(Name_, Email_, MobileNo_, AccType_, Password, InitialDeposite_);
                 }
+               
+                
             }
             else if (ae.getSource() == clear) {
                 nameInput.setText("");
@@ -214,8 +191,58 @@ class ApplicationForm extends JFrame implements ActionListener{
             JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+
+    // function to return Account number using system time and random number
     private String generateAccountNumber() {
         return System.currentTimeMillis() + String.valueOf((int) (Math.random() * 10000));
+    }
+
+
+    // A funcction to enter data to excel Sheet
+    private void dataEntry(String Name, String Email, String MobileNo, String AccType, String Password, String initialDeposite) {
+
+        String Account_No = generateAccountNumber();
+        XSSFWorkbook workbk;
+        XSSFSheet sheet;
+        File excelFile = new File("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx");
+        
+
+        try{
+            FileInputStream excel = new FileInputStream(excelFile);
+            workbk = new XSSFWorkbook(excel);
+            sheet = workbk.getSheet("Sheet1");
+            int rowIndex = 5;
+
+
+            for(Row row :sheet){
+                for(Cell cell : row) {
+                    if (cell.getStringCellValue().isEmpty()){
+                        rowIndex = cell.getRowIndex();
+                    }
+                }
+            }
+            Row headerRow = sheet.createRow(rowIndex);
+            headerRow.createCell(0).setCellValue(Name);
+            headerRow.createCell(1).setCellValue(Account_No);
+            headerRow.createCell(2).setCellValue(MobileNo);
+            headerRow.createCell(3).setCellValue(Email);
+            headerRow.createCell(4).setCellValue(Password);
+            headerRow.createCell(5).setCellValue(AccType);
+            headerRow.createCell(6).setCellValue(initialDeposite);
+            headerRow.createCell(7).setCellValue(initialDeposite);
+
+            try (FileOutputStream fileOut = new FileOutputStream("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx")) {
+                workbk.write(fileOut);
+                workbk.close();
+
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error writing to Excel file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch(Exception e){
+            JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     public static void main(String[] args) {
         new ApplicationForm();

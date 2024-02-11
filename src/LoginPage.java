@@ -1,4 +1,10 @@
+import java.io.*;
 import javax.swing.*;
+
+
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +16,6 @@ class LoginPage extends JFrame implements ActionListener{
     private JLabel accountNo, password;
     private JTextField accountNoInput;
     private JPasswordField passwordInput;
-    private String Login_Username, LoginPassword;
 
     LoginPage() 
     {
@@ -104,14 +109,14 @@ class LoginPage extends JFrame implements ActionListener{
             {
                 String id = accountNoInput.getText().toString();
                 String Password = passwordInput.getPassword().toString();
-                LoginPassword = Password;
-                Login_Username = id;
+                
 
                 if(id.isBlank() || Password.isBlank() ) {
                     alertMsg.setText("Password can't be Empty");
+
                 }
                 else {
-                    alertMsg.setText("UserName can't be Empty");
+                    LoginConfirmation(id,Password);
                 }
                 
 
@@ -120,13 +125,36 @@ class LoginPage extends JFrame implements ActionListener{
             e.printStackTrace();
         }
     }
-    public String getUsername()
-    {
-        return Login_Username;
-    }
-    public String getPassword(){
-        return LoginPassword;
-    }
+    
+    public void LoginConfirmation(String Id, String Password){
 
+        XSSFWorkbook workbk;
+        XSSFSheet sheet;
+        File excelFile = new File("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx");
+        String EmailId, password;
+        try{
+            FileInputStream excel = new FileInputStream(excelFile);
+            workbk = new XSSFWorkbook(excel);
+            sheet = workbk.getSheet("Sheet1");
+
+            int lastRow = sheet.getLastRowNum();
+
+            for(int i=5;i<=lastRow;i++) {
+                EmailId = (sheet.getRow(i).getCell(3)).toString();
+                password = (sheet.getRow(i).getCell(4)).toString();
+                if (EmailId.equals(Id) && password.equals(Password)){
+                    new AccountDetail();
+                    dispose();
+                }
+            }
+           
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    public static void main(String[] args) {
+        new LoginPage();
+    }
 
 }
