@@ -19,6 +19,7 @@ class ApplicationForm extends JFrame implements ActionListener{
     private JTextField nameInput, MobileInput, EmailInput, InitialDepositeInput, passwordInput;
     private JComboBox<String> AccountType;
     private JButton Submit, clear;
+    private XSSFWorkbook workbk;
 
     ApplicationForm()
     {
@@ -139,7 +140,7 @@ class ApplicationForm extends JFrame implements ActionListener{
         setLocation(380, 150);
         // setUndecorated(true);
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
     public void actionPerformed(ActionEvent ae) {
         try {
@@ -158,7 +159,7 @@ class ApplicationForm extends JFrame implements ActionListener{
                 
                 String AccType_ = (String) AccountType.getSelectedItem();
 
-                String Account_No = "00100501227879";
+                String Account_No = generateAccountNumber();
                 if(Name_.isBlank() || MobileNo_.isBlank() || Email_.isBlank() || InitialDeposite_.isBlank() ) {
                     WarningMsg.setText("None of the fields should be empty");
                 }
@@ -167,36 +168,39 @@ class ApplicationForm extends JFrame implements ActionListener{
                 }
                 WarningMsg.setText(Name_+"\t"+MobileNo_+"\t"+Email_+"\t"+InitialDeposite_+"\t"+Password+"\t"+Account_No+"\t"+AccType_);
                 // File excelFile = new File("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx");
-                try(XSSFWorkbook workbk = new XSSFWorkbook()) {
-                
-                XSSFSheet sheet = workbk.getSheetAt(0);
-                int rowIndex = 5;
+                try{
+                    workbk = new XSSFWorkbook();
+                    XSSFSheet sheet = workbk.getSheetAt(0);
+                    int rowIndex = 5;
 
-                for (Row row : sheet) {
-                    for (Cell cell : row) {
-                        if (cell.getCellType() != CellType.BLANK) {
-                            rowIndex++;
+                    for (Row row : sheet) {
+                        for (Cell cell : row) {
+                            if (cell.getCellType() != CellType.BLANK) {
+                                rowIndex++;
+                            }
                         }
                     }
-                }
-                Row headerRow = sheet.createRow(rowIndex);
-                headerRow.createCell(0).setCellValue(Name_);
-                headerRow.createCell(1).setCellValue(Account_No);
-                headerRow.createCell(2).setCellValue(MobileNo_);
-                headerRow.createCell(3).setCellValue(Email_);
-                headerRow.createCell(4).setCellValue(Password);
-                headerRow.createCell(5).setCellValue(AccType_);
-                headerRow.createCell(6).setCellValue(InitialDeposite_);
-                headerRow.createCell(7).setCellValue(InitialDeposite_);
+                    Row headerRow = sheet.createRow(rowIndex);
+                    headerRow.createCell(0).setCellValue(Name_);
+                    headerRow.createCell(1).setCellValue(Account_No);
+                    headerRow.createCell(2).setCellValue(MobileNo_);
+                    headerRow.createCell(3).setCellValue(Email_);
+                    headerRow.createCell(4).setCellValue(Password);
+                    headerRow.createCell(5).setCellValue(AccType_);
+                    headerRow.createCell(6).setCellValue(InitialDeposite_);
+                    headerRow.createCell(7).setCellValue(InitialDeposite_);
 
-                try (FileOutputStream fileOut = new FileOutputStream("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx")) {
-                    workbk.write(fileOut);
-                }
-               } catch (IOException e) {
-                    System.out.println(e);
-               }
+                    try (FileOutputStream fileOut = new FileOutputStream("path/to/your/excel/file/UserDetail.xlsx")) {
+                        workbk.write(fileOut);
+                        workbk.close();
 
-                
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(this, "Error writing to Excel file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                } catch(Exception e){
+                    JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             else if (ae.getSource() == clear) {
                 nameInput.setText("");
@@ -205,9 +209,13 @@ class ApplicationForm extends JFrame implements ActionListener{
                 InitialDepositeInput.setText("");
                 passwordInput.setText("");
             }
+        
         } catch (Exception e) {
-            System.out.println(e);
+            JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    private String generateAccountNumber() {
+        return System.currentTimeMillis() + String.valueOf((int) (Math.random() * 10000));
     }
     public static void main(String[] args) {
         new ApplicationForm();
