@@ -1,12 +1,14 @@
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.*;
+// import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class AccountDetail extends JFrame{
+public class AccountDetail extends JFrame implements ActionListener{
     private JLabel bankName, bankAddress;
-    private JLabel UserName, Account_No, Mobile_No, Email, Account_Balance, LastTransTO, LastTransTimeDate;
-    private JLabel Name;
+    private JLabel UserName, Account_No, Mobile_No, Email, Account_Balance, AccountType, LastTransTO;
+    private JLabel name_, email_, mobileNo_, accountNo_, accountBal_, accType_, lastTrans_;
+    private JButton logout, transferMoney;
     AccountDetail() {
 
         bankName = new JLabel("Bank of Chittoor");
@@ -25,31 +27,113 @@ public class AccountDetail extends JFrame{
         UserName = new JLabel("Name: ");
         UserName.setForeground(Color.WHITE);
         UserName.setFont(new Font("Arial", Font.PLAIN, 23));
-        UserName.setBounds(50, 120, 100, 30);
+        UserName.setBounds(450, 150, 100, 30);
         add(UserName);
 
-        Name = new JLabel("Shubhash Singh");
-        Name.setForeground(Color.RED);
-        Name.setFont(new Font("Arial", Font.ITALIC, 23));
-        Name.setBounds(150, 120, 400, 30);
-        add(Name);
+        name_ = new JLabel();
+        name_.setForeground(Color.RED);
+        name_.setFont(new Font("Arial", Font.ITALIC, 23));
+        name_.setBounds(520, 150, 500, 30);
+        add(name_);
 
-        Account_No = new JLabel("Account Number: ");
-        Account_No.setForeground(Color.WHITE);
-        Account_No.setFont(new Font("Arial", Font.PLAIN, 23));
-        Account_No.setBounds(50, 150, 100, 30);
-        add(Account_No);
 
         Email = new JLabel("Email: ");
         Email.setForeground(Color.WHITE);
         Email.setFont(new Font("Arial", Font.PLAIN, 23));
-        Email.setBounds(50, 180, 100, 30);
+        Email.setBounds(450, 190, 100, 30);
         add(Email);
 
-        Mobile_No = new JLabel();
+        email_ = new JLabel();
+        email_.setForeground(Color.RED);
+        email_.setFont(new Font("Arial", Font.ITALIC, 23));
+        email_.setBounds(519, 190, 500, 30);
+        add(email_);
+
+        Mobile_No = new JLabel("Mobile Number: ");
         Mobile_No.setForeground(Color.WHITE);
         Mobile_No.setFont(new Font("Arial", Font.PLAIN, 23));
+        Mobile_No.setBounds(450, 230, 200, 30);
+        add(Mobile_No);
         
+        mobileNo_ = new JLabel();
+        mobileNo_.setForeground(Color.RED);
+        mobileNo_.setFont(new Font("Arial", Font.ITALIC, 23));
+        mobileNo_.setBounds(612, 230, 500, 30);
+        add(mobileNo_);
+
+
+        Account_No = new JLabel("Account Number: ");
+        Account_No.setForeground(Color.WHITE);
+        Account_No.setFont(new Font("Arial", Font.PLAIN, 23));
+        Account_No.setBounds(450, 270, 200, 30);
+        add(Account_No);
+
+        accountNo_ = new JLabel();
+        accountNo_.setForeground(Color.RED);
+        accountNo_.setFont(new Font("Arial", Font.ITALIC, 23));
+        accountNo_.setBounds(625, 270, 500, 30);
+        add(accountNo_);
+
+
+        Account_Balance = new JLabel("Balance: ");
+        Account_Balance.setForeground(Color.WHITE);
+        Account_Balance.setFont(new Font("Arial", Font.PLAIN, 23));
+        Account_Balance.setBounds(450, 310, 200, 30);
+        add(Account_Balance);
+
+
+        accountBal_ = new JLabel();
+        accountBal_.setForeground(Color.RED);
+        accountBal_.setFont(new Font("Arial", Font.ITALIC, 23));
+        accountBal_.setBounds(540, 310, 500, 30);
+        add(accountBal_);
+
+
+
+        AccountType = new JLabel("Account Type: ");
+        AccountType.setForeground(Color.WHITE);
+        AccountType.setFont(new Font("Arial", Font.PLAIN, 23));
+        AccountType.setBounds(450, 350, 200, 30);
+        add(AccountType);
+
+        accType_ = new JLabel();
+        accType_.setForeground(Color.RED);
+        accType_.setFont(new Font("Arial", Font.ITALIC, 23));
+        accType_.setBounds(597, 350, 500, 30);
+        add(accType_);
+
+
+        LastTransTO = new JLabel("Last Transaction: ");
+        LastTransTO.setForeground(Color.WHITE);
+        LastTransTO.setFont(new Font("Arial", Font.PLAIN, 23));
+        LastTransTO.setBounds(450, 390, 200, 30);
+        add(LastTransTO);
+
+        lastTrans_ = new JLabel();
+        lastTrans_.setForeground(Color.RED);
+        lastTrans_.setFont(new Font("Arial", Font.ITALIC, 23));
+        lastTrans_.setBounds(630, 390, 500, 30);
+        add(lastTrans_);
+
+
+        logout = new JButton("Logout");
+        logout.setForeground(Color.WHITE);
+        logout.setBackground(Color.RED);
+        logout.setBorder(null);
+        logout.addActionListener(this);
+        logout.setBounds(600, 520, 100, 40);
+        add(logout);
+
+
+        transferMoney = new JButton();
+        transferMoney = new JButton("Pay");
+        transferMoney.setForeground(Color.WHITE);
+        transferMoney.setBackground(Color.red);
+        transferMoney.setBorder(null);
+        transferMoney.addActionListener(this);
+        transferMoney.setBounds(610, 450, 80, 40);
+        add(transferMoney);
+
 
         ImageIcon backgroundImage = new ImageIcon("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/Images/Login_BackGround2.jpg");
         Image background = backgroundImage.getImage().getScaledInstance(1000, 650, Image.SCALE_DEFAULT);
@@ -58,20 +142,29 @@ public class AccountDetail extends JFrame{
         imagBack.setBounds(0, 0, 1000, 650);
         add(imagBack); 
 
-        
-
         setLayout(null);
         setSize(1010, 650);
         setLocation(380, 150);
         // setUndecorated(true);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-    private ArrayList<String> getDetails(String usrename, String Password)
-    {   
-        ArrayList<String> userDetail = new ArrayList<>();
+
         
-        return userDetail;
+    }
+    public void actionPerformed(ActionEvent ae){
+        try {
+            
+            if(ae.getSource() == logout) {
+                new LoginPage();
+                dispose();
+
+            }
+            else if(ae.getSource() == transferMoney) {
+                new TransactionSection();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     public static void main(String[] args) {
         new AccountDetail();
