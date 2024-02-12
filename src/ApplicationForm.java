@@ -5,7 +5,6 @@ import java.io.*;
 
 import javax.swing.*;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -13,7 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 class ApplicationForm extends JFrame implements ActionListener{
 
-    private JLabel bankName;
+    private JLabel bankName, bankAddress;
     private JLabel name, Mobile, Email, AccType, InitialDeposite, WarningMsg, password;
     private JTextField nameInput, MobileInput, EmailInput, InitialDepositeInput, passwordInput;
     private JComboBox<String> AccountType;
@@ -24,11 +23,17 @@ class ApplicationForm extends JFrame implements ActionListener{
     {
         bankName = new JLabel("Bank of Chittoor");
         bankName.setForeground(Color.WHITE);
-        bankName.setFont(new Font("Monotype Corsiva", Font.ITALIC, 55));
-        bankName.setBounds(300, 20, 1000, 80);  //(x, y, width, height)
+        bankName.setFont(new Font("Monotype Corsiva", Font.ITALIC, 65));
+        bankName.setBounds(270, 20, 1000, 80);  //(x, y, width, height)
         add(bankName);
 
-        
+        bankAddress = new JLabel("Chittoor, Andra Pradesh, 517-127, India");
+        bankAddress.setForeground(Color.LIGHT_GRAY);
+        bankAddress.setFont(new Font("Monotype Corsiva", Font.PLAIN, 20));
+        bankAddress.setBounds(320, 85, 1000, 50);
+        add(bankAddress);
+
+
         // Name Entry Sections
         name = new JLabel("Name: ");
         name.setForeground(Color.WHITE);
@@ -144,7 +149,7 @@ class ApplicationForm extends JFrame implements ActionListener{
         add(imagBack);
 
         setLayout(null);
-        setSize(1000, 650);
+        setSize(1010, 650);
         setLocation(380, 150);
         // setUndecorated(true);
         setVisible(true);
@@ -212,16 +217,11 @@ class ApplicationForm extends JFrame implements ActionListener{
             FileInputStream excel = new FileInputStream(excelFile);
             workbk = new XSSFWorkbook(excel);
             sheet = workbk.getSheet("Sheet1");
-            int rowIndex = 5;
+            
+            int rowIndex = sheet.getLastRowNum()+1;
+            
 
-
-            for(Row row :sheet){
-                for(Cell cell : row) {
-                    if (cell.getStringCellValue().isEmpty()){
-                        rowIndex = cell.getRowIndex();
-                    }
-                }
-            }
+            
             Row headerRow = sheet.createRow(rowIndex);
             headerRow.createCell(0).setCellValue(Name);
             headerRow.createCell(1).setCellValue(Account_No);

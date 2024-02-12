@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 class LoginPage extends JFrame implements ActionListener{
-    private JLabel bankName, alertMsg;
+    private JLabel bankName, alertMsg, bankAddress;
     private JButton logIn;
     private JButton signUp;
     private JLabel accountNo, password;
@@ -27,6 +27,12 @@ class LoginPage extends JFrame implements ActionListener{
         bankName.setFont(new Font("Monotype Corsiva", Font.ITALIC, 55));
         bankName.setBounds(300, 20, 1000, 80);  //(x, y, width, height)
         add(bankName);
+
+        bankAddress = new JLabel("Chittoor, Andra Pradesh, 517-127, India");
+        bankAddress.setForeground(Color.LIGHT_GRAY);
+        bankAddress.setFont(new Font("Monotype Corsiva", Font.PLAIN, 20));
+        bankAddress.setBounds(320, 85, 1000, 50);
+        add(bankAddress);
 
 
         accountNo = new JLabel("Email Id: ");
@@ -86,7 +92,7 @@ class LoginPage extends JFrame implements ActionListener{
 
         
         setLayout(null);
-        setSize(1000, 650);
+        setSize(1010, 650);
         setLocation(380, 150);
         // setUndecorated(true);
         setVisible(true);
@@ -108,11 +114,12 @@ class LoginPage extends JFrame implements ActionListener{
             else if (ae.getSource() == logIn)
             {
                 String id = accountNoInput.getText().toString();
-                String Password = passwordInput.getPassword().toString();
+                char[] passwordChars = passwordInput.getPassword();
+                String Password = String.valueOf(passwordChars);
                 
 
                 if(id.isBlank() || Password.isBlank() ) {
-                    alertMsg.setText("Password can't be Empty");
+                    alertMsg.setText("Email or Username can't be Empty");
 
                 }
                 else {
@@ -132,19 +139,27 @@ class LoginPage extends JFrame implements ActionListener{
         XSSFSheet sheet;
         File excelFile = new File("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx");
         String EmailId, password;
+
+
         try{
             FileInputStream excel = new FileInputStream(excelFile);
             workbk = new XSSFWorkbook(excel);
             sheet = workbk.getSheet("Sheet1");
 
-            int lastRow = sheet.getLastRowNum();
-
-            for(int i=5;i<=lastRow;i++) {
-                EmailId = (sheet.getRow(i).getCell(3)).toString();
-                password = (sheet.getRow(i).getCell(4)).toString();
-                if (EmailId.equals(Id) && password.equals(Password)){
-                    new AccountDetail();
+            // String Name = (sheet.getRow(3).getCell(3)).toString();
+            // alertMsg.setText(Name);
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                EmailId = sheet.getRow(i).getCell(3).toString();
+                password = sheet.getRow(i).getCell(4).toString();
+    
+                if (EmailId.equals(Id) && password.equals(Password)) {
+                    // String Name = sheet.getRow(i).getCell(0).toString();
+                    // String MobileNo = sheet.getRow(i).getCell(2).toString();
+                    // new AccountDetail(Name, EmailId, );
+                    workbk.close();
                     dispose();
+                    
+                    break;
                 }
             }
            
