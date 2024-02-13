@@ -5,8 +5,6 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -129,24 +127,26 @@ public class TransactionSection extends JFrame implements ActionListener{
             sheet = workbk.getSheet("Sheet1");
 
             
-            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+            for (int i = 2; i <= sheet.getLastRowNum(); i++) {
                 String EmailId = sheet.getRow(i).getCell(3).toString();
 
                 if(userId.equals(EmailId)) {
                     
-                    Row row = sheet.getRow(i);
-                    Cell amountCell = row.getCell(5);
-                    Cell nameCell = row.getCell(1);
-                    Cell lastTranferFrom = row.getCell(9);
-                    
-                    String lastTransTo = String.valueOf(amount)+"to "+nameCell+LocalDate.now().toString() +" on "+ LocalTime.now().toString();
+                    String receiverName = sheet.getRow(i).getCell(0).toString();
+                    sheet.getRow(i).getCell(5).setCellValue(amount);
 
-                    for(int j=5;j<sheet.getLastRowNum();j++) {
-                        
+                    for(int j=2;j<sheet.getLastRowNum();j++) {
+                        if (accNumber.equals(sheet.getRow(j).getCell(1).toString())) {
+                            String lastTransferAmount = "- "+amount;
+                            String senderName = sheet.getRow(j).getCell(0).toString();
+                            String lastTransreceiver = String.valueOf(amount)+" from "+senderName+" on "+LocalDate.now().toString() +" at "+ LocalTime.now().toString();
+                            String lastTransferSender = String.valueOf(amount)+" to "+ receiverName+" on "+LocalDate.now().toString() +" at "+ LocalTime.now().toString();
+
+                            sheet.getRow(j).getCell(8).setCellValue(lastTransferAmount);
+                            sheet.getRow(j).getCell(10).setCellValue(lastTransferSender);
+                            sheet.getRow(i).getCell(10).setCellValue(lastTransreceiver);
+                        }
                     }
-                    
-                    lastTranferFrom.setCellValue(lastTransTo);
-                    amountCell.setCellValue(amount);
                 }
                     
             }
