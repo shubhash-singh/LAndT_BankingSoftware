@@ -153,9 +153,17 @@ class LoginPage extends JFrame implements ActionListener{
                 password = sheet.getRow(i).getCell(4).toString();
     
                 if (EmailId.equals(Id) && password.equals(Password)) {
-                    // String Name = sheet.getRow(i).getCell(0).toString();
-                    // String MobileNo = sheet.getRow(i).getCell(2).toString();
-                    // new AccountDetail(Name, EmailId, );
+                    String Name = sheet.getRow(i).getCell(0).toString();
+                    String accNumber = sheet.getRow(i).getCell(1).toString();
+                    String MobileNo = sheet.getRow(i).getCell(2).toString();
+                    String emailId = sheet.getRow(i).getCell(3).toString();
+                    String accType = sheet.getRow(i).getCell(5).toString();
+                    String balance = sheet.getRow(i).getCell(6).toString();
+                    String lastTrans = sheet.getRow(i).getCell(8).toString();
+                    String lastTransDetails = sheet.getRow(i).getCell(9).toString();
+
+                    
+                    new AccountDetail(Name, accNumber, MobileNo, emailId, accType, balance, lastTrans, lastTransDetails);
                     workbk.close();
                     dispose();
                     

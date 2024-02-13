@@ -2,6 +2,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.swing.*;
 
@@ -55,6 +57,7 @@ class ApplicationForm extends JFrame implements ActionListener{
 
         MobileInput = new JTextField();
         MobileInput.setBounds(665, 200, 325, 30);
+        MobileInput.setFont(new Font("Arial", Font.PLAIN, 20));
         add(MobileInput);
 
 
@@ -67,6 +70,7 @@ class ApplicationForm extends JFrame implements ActionListener{
 
         EmailInput = new JTextField();
         EmailInput.setBounds(665, 250 ,325, 30);
+        EmailInput.setFont(new Font("Arial", Font.PLAIN, 20));
         add(EmailInput);
 
 
@@ -93,6 +97,7 @@ class ApplicationForm extends JFrame implements ActionListener{
 
         InitialDepositeInput = new JTextField();
         InitialDepositeInput.setBounds(665, 350, 325, 30);
+        InitialDepositeInput.setFont(new Font("Arial", Font.PLAIN, 20));
         add(InitialDepositeInput);
 
         // Section to create password for further Login
@@ -104,6 +109,7 @@ class ApplicationForm extends JFrame implements ActionListener{
 
         passwordInput = new JTextField();
         passwordInput.setBounds(665, 400, 325, 30);
+        passwordInput.setFont(new Font("Arial", Font.PLAIN, 20));
         add(passwordInput);
 
         // Button to submit all the data to open a new Bank account
@@ -129,7 +135,7 @@ class ApplicationForm extends JFrame implements ActionListener{
         logIn.setBackground(Color.RED);
         logIn.setBorder(null);
         logIn.addActionListener(this);
-        logIn.setBounds(690, 330, 100, 40);
+        logIn.setBounds(660, 550, 100, 40);
         add(logIn);
 
 
@@ -191,6 +197,10 @@ class ApplicationForm extends JFrame implements ActionListener{
                 InitialDepositeInput.setText("");
                 passwordInput.setText("");
             }
+            else if (ae.getSource() == logIn) {
+                new LoginPage();
+                dispose();
+            }
         
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -217,10 +227,10 @@ class ApplicationForm extends JFrame implements ActionListener{
             FileInputStream excel = new FileInputStream(excelFile);
             workbk = new XSSFWorkbook(excel);
             sheet = workbk.getSheet("Sheet1");
-            
-            int rowIndex = sheet.getLastRowNum()+1;
-            
 
+            String timeDate = (LocalDate.now()).toString() + "  " +LocalTime.now().toString();
+            String lastTrans = "+ " +initialDeposite ;
+            int rowIndex = sheet.getLastRowNum()+1;
             
             Row headerRow = sheet.createRow(rowIndex);
             headerRow.createCell(0).setCellValue(Name);
@@ -231,6 +241,8 @@ class ApplicationForm extends JFrame implements ActionListener{
             headerRow.createCell(5).setCellValue(AccType);
             headerRow.createCell(6).setCellValue(initialDeposite);
             headerRow.createCell(7).setCellValue(initialDeposite);
+            headerRow.createCell(8).setCellValue(lastTrans);
+            headerRow.createCell(9).setCellValue(timeDate);
 
             try (FileOutputStream fileOut = new FileOutputStream("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx")) {
                 workbk.write(fileOut);
@@ -243,8 +255,5 @@ class ApplicationForm extends JFrame implements ActionListener{
         } catch(Exception e){
             JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    public static void main(String[] args) {
-        new ApplicationForm();
     }
 }

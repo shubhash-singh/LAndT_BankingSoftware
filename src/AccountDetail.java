@@ -5,11 +5,17 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class AccountDetail extends JFrame implements ActionListener{
+
     private JLabel bankName, bankAddress;
     private JLabel UserName, Account_No, Mobile_No, Email, Account_Balance, AccountType, LastTransTO;
     private JLabel name_, email_, mobileNo_, accountNo_, accountBal_, accType_, lastTrans_;
     private JButton logout, transferMoney;
-    AccountDetail() {
+    String accNumber;
+
+
+    AccountDetail(String Name, String accNumber, String MobileNo, String emailId, String accType, String balance, String lastTrans, String lastTransDetails) {
+        this.accNumber = accNumber;
+
 
         bankName = new JLabel("Bank of Chittoor");
         bankName.setForeground(Color.WHITE);
@@ -30,7 +36,7 @@ public class AccountDetail extends JFrame implements ActionListener{
         UserName.setBounds(450, 150, 100, 30);
         add(UserName);
 
-        name_ = new JLabel();
+        name_ = new JLabel(Name);
         name_.setForeground(Color.RED);
         name_.setFont(new Font("Arial", Font.ITALIC, 23));
         name_.setBounds(520, 150, 500, 30);
@@ -43,7 +49,7 @@ public class AccountDetail extends JFrame implements ActionListener{
         Email.setBounds(450, 190, 100, 30);
         add(Email);
 
-        email_ = new JLabel();
+        email_ = new JLabel(emailId);
         email_.setForeground(Color.RED);
         email_.setFont(new Font("Arial", Font.ITALIC, 23));
         email_.setBounds(519, 190, 500, 30);
@@ -55,7 +61,7 @@ public class AccountDetail extends JFrame implements ActionListener{
         Mobile_No.setBounds(450, 230, 200, 30);
         add(Mobile_No);
         
-        mobileNo_ = new JLabel();
+        mobileNo_ = new JLabel(MobileNo);
         mobileNo_.setForeground(Color.RED);
         mobileNo_.setFont(new Font("Arial", Font.ITALIC, 23));
         mobileNo_.setBounds(612, 230, 500, 30);
@@ -68,7 +74,7 @@ public class AccountDetail extends JFrame implements ActionListener{
         Account_No.setBounds(450, 270, 200, 30);
         add(Account_No);
 
-        accountNo_ = new JLabel();
+        accountNo_ = new JLabel(accNumber);
         accountNo_.setForeground(Color.RED);
         accountNo_.setFont(new Font("Arial", Font.ITALIC, 23));
         accountNo_.setBounds(625, 270, 500, 30);
@@ -82,7 +88,7 @@ public class AccountDetail extends JFrame implements ActionListener{
         add(Account_Balance);
 
 
-        accountBal_ = new JLabel();
+        accountBal_ = new JLabel(balance);
         accountBal_.setForeground(Color.RED);
         accountBal_.setFont(new Font("Arial", Font.ITALIC, 23));
         accountBal_.setBounds(540, 310, 500, 30);
@@ -96,7 +102,7 @@ public class AccountDetail extends JFrame implements ActionListener{
         AccountType.setBounds(450, 350, 200, 30);
         add(AccountType);
 
-        accType_ = new JLabel();
+        accType_ = new JLabel(accType);
         accType_.setForeground(Color.RED);
         accType_.setFont(new Font("Arial", Font.ITALIC, 23));
         accType_.setBounds(597, 350, 500, 30);
@@ -109,7 +115,9 @@ public class AccountDetail extends JFrame implements ActionListener{
         LastTransTO.setBounds(450, 390, 200, 30);
         add(LastTransTO);
 
-        lastTrans_ = new JLabel();
+
+        String lastTransDetail = lastTrans+" "+lastTransDetails;
+        lastTrans_ = new JLabel(lastTransDetail);
         lastTrans_.setForeground(Color.RED);
         lastTrans_.setFont(new Font("Arial", Font.ITALIC, 23));
         lastTrans_.setBounds(630, 390, 500, 30);
@@ -152,6 +160,7 @@ public class AccountDetail extends JFrame implements ActionListener{
         
     }
     public void actionPerformed(ActionEvent ae){
+
         try {
             
             if(ae.getSource() == logout) {
@@ -160,13 +169,11 @@ public class AccountDetail extends JFrame implements ActionListener{
 
             }
             else if(ae.getSource() == transferMoney) {
-                new TransactionSection();
+                new TransactionSection(accNumber);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    public static void main(String[] args) {
-        new AccountDetail();
-    }
+   
 }
