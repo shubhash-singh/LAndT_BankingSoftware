@@ -121,6 +121,7 @@ public class TransactionSection extends JFrame implements ActionListener{
                 }
             }
             else if (ae.getSource() == goBack) {
+
                 
             }
         } catch (Exception e) {
@@ -210,6 +211,38 @@ public class TransactionSection extends JFrame implements ActionListener{
             }
 
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void getCellValue(){
+        XSSFWorkbook workbook;
+        XSSFSheet sheet;
+        File excelFile = new File("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx");
+
+        try{
+            
+            workbook = new XSSFWorkbook(excelFile);
+            sheet = workbook.getSheet("Sheet1");
+            Row row = sheet.getRow(rowNum);
+
+
+            String name_ = row.getCell(0).getStringCellValue();
+            String accNum = row.getCell(1).getStringCellValue();
+            String phoneNo = row.getCell(2).getStringCellValue();
+            String emailId = row.getCell(3).getStringCellValue();
+            String accType = row.getCell(5).getStringCellValue();
+            String balance = row.getCell(6).getStringCellValue();
+            String lastTrans = row.getCell(8).getStringCellValue();
+            String lastTransTime = row.getCell(9).getStringCellValue();
+            String lastTransDetails = row.getCell(10).getStringCellValue();
+
+            workbook.close();
+
+            new AccountDetail(name_, accNum, phoneNo, emailId, accType, balance, lastTrans, lastTransTime, lastTransDetails, rowNum);
+            dispose();
+
+        }catch(Exception e){
             JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
