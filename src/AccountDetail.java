@@ -129,7 +129,7 @@ public class AccountDetail extends JFrame implements ActionListener{
         lastTransTime_ = new JLabel(lastTransTime);
         lastTransTime_.setForeground(Color.RED);
         lastTransTime_.setFont(new Font("Arial", Font.ITALIC, 23));
-        lastTransTime_.setBounds(630, 400, 500, 50);
+        lastTransTime_.setBounds(630, 408, 500, 50);
         add(lastTransTime_);
 
         logout = new JButton("Logout");
@@ -184,5 +184,7 @@ public class AccountDetail extends JFrame implements ActionListener{
             JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-   
+    public static void main(String[] args) {
+        
+    }
 }

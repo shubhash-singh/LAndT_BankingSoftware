@@ -102,8 +102,10 @@ public class TransactionSection extends JFrame implements ActionListener{
         try {
             
             if (ae.getSource() == transferMoney) {
+                
                 String userId = emailId.getText().toString();
                 int payAmount = Integer.parseInt(sendMoney.getText());
+
                 if (payAmount < 0) {
                     alertMsg.setText("Amount can't be less than 0.");
                 }
@@ -113,7 +115,7 @@ public class TransactionSection extends JFrame implements ActionListener{
                 else if(payAmount > balance){
                     alertMsg.setText("Insufficient Balance");
                 }
-                else if (userId.isBlank() ) {
+                else if (userId.isBlank() || payAmount ==0) {
                     alertMsg.setText("None of the fields can be empty");
                 }
                 else {
@@ -121,7 +123,7 @@ public class TransactionSection extends JFrame implements ActionListener{
                 }
             }
             else if (ae.getSource() == goBack) {
-
+                getCellValue();
                 
             }
         } catch (Exception e) {
@@ -152,14 +154,14 @@ public class TransactionSection extends JFrame implements ActionListener{
     
                             String cellValue = cell.getStringCellValue();
                             // Searching for the Receiver Email address
-                            if (cellValue.contains(userId)) {
+                            if (cellValue.equals(userId)) {
     
     
                                 Row senderRow = sheet.getRow(rowNum);
     
                                 // setting new balance for both sender and receiver
-                                double senderAmount = senderRow.getCell(6).getNumericCellValue() - amount;
-                                double receiverAmount = receiverRow.getCell(6).getNumericCellValue() + amount;
+                                double senderAmount = Double.parseDouble(senderRow.getCell(6).getStringCellValue()) - amount;
+                                double receiverAmount = Double.parseDouble(senderRow.getCell(6).getStringCellValue()) + amount;
     
                                 // setting last Transaction for sender and receiver
                                 String senderLastTrans = "-"+String.valueOf(amount);
