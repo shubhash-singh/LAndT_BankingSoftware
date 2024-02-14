@@ -5,6 +5,8 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -14,10 +16,13 @@ public class TransactionSection extends JFrame implements ActionListener{
     private JTextArea emailId, sendMoney;
     private JButton transferMoney, goBack;
     String accNumber;
+    int balance, rowNum;
     
-    TransactionSection(String accNumber) {
+    TransactionSection(String accNumber, String balance, int rowNum) {
 
         this.accNumber = accNumber;
+        this.balance = Integer.parseInt(balance);
+        this.rowNum = rowNum;
 
         bankName = new JLabel("Bank of Chittoor");
         bankName.setForeground(Color.WHITE);
@@ -26,10 +31,10 @@ public class TransactionSection extends JFrame implements ActionListener{
         add(bankName);
 
 
-        accountNo = new JLabel("Sender Email Id: ");
+        accountNo = new JLabel("Receiver Email Id: ");
         accountNo.setForeground(Color.WHITE);
         accountNo.setFont(new Font("Arial", Font.PLAIN, 28));
-        accountNo.setBounds(365, 150, 400, 30);
+        accountNo.setBounds(350, 150, 400, 30);
         add(accountNo);
 
 
@@ -105,12 +110,21 @@ public class TransactionSection extends JFrame implements ActionListener{
                 else if (payAmount > 100000) {
                     alertMsg.setText("Amount is too big.");
                 }
+                else if(payAmount > balance){
+                    alertMsg.setText("Insufficient Balance");
+                }
+                else if (userId.isBlank() ) {
+                    alertMsg.setText("None of the fields can be empty");
+                }
                 else {
                     executeTransfer(payAmount, userId);
                 }
             }
+            else if (ae.getSource() == goBack) {
+                
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);    
+            alertMsg.setText(e.getMessage());
         }
     }
 
@@ -125,31 +139,68 @@ public class TransactionSection extends JFrame implements ActionListener{
         try {
             workbk = new XSSFWorkbook(excelFile);
             sheet = workbk.getSheet("Sheet1");
-
-            
-            for (int i = 2; i <= sheet.getLastRowNum(); i++) {
-                String EmailId = sheet.getRow(i).getCell(3).toString();
-
-                if(userId.equals(EmailId)) {
+            if (sheet != null) {
+                if(sheet.getRow(rowNum).getCell(3).getStringCellValue().equals(userId)) {
+                    alertMsg.setText("Can't send Money to yourself");
+                }
+                else {
+                    for(Row receiverRow : sheet) {
                     
-                    String receiverName = sheet.getRow(i).getCell(0).toString();
-                    sheet.getRow(i).getCell(5).setCellValue(amount);
-
-                    for(int j=2;j<sheet.getLastRowNum();j++) {
-                        if (accNumber.equals(sheet.getRow(j).getCell(1).toString())) {
-                            String lastTransferAmount = "- "+amount;
-                            String senderName = sheet.getRow(j).getCell(0).toString();
-                            String lastTransreceiver = String.valueOf(amount)+" from "+senderName+" on "+LocalDate.now().toString() +" at "+ LocalTime.now().toString();
-                            String lastTransferSender = String.valueOf(amount)+" to "+ receiverName+" on "+LocalDate.now().toString() +" at "+ LocalTime.now().toString();
-
-                            sheet.getRow(j).getCell(8).setCellValue(lastTransferAmount);
-                            sheet.getRow(j).getCell(10).setCellValue(lastTransferSender);
-                            sheet.getRow(i).getCell(10).setCellValue(lastTransreceiver);
+                        Cell cell = receiverRow.getCell(3);
+                        if (cell != null) {
+    
+                            String cellValue = cell.getStringCellValue();
+                            // Searching for the Receiver Email address
+                            if (cellValue.contains(userId)) {
+    
+    
+                                Row senderRow = sheet.getRow(rowNum);
+    
+                                // setting new balance for both sender and receiver
+                                double senderAmount = senderRow.getCell(6).getNumericCellValue() - amount;
+                                double receiverAmount = receiverRow.getCell(6).getNumericCellValue() + amount;
+    
+                                // setting last Transaction for sender and receiver
+                                String senderLastTrans = "-"+String.valueOf(amount);
+                                String receiverLastTrans = "+"+String.valueOf(amount);
+    
+                                String senderName = senderRow.getCell(0).getStringCellValue();
+                                String receiverName = receiverRow.getCell(0).getStringCellValue();
+    
+                                String TransactionTime = " on "+LocalDate.now().toString()+" at "+LocalTime.now().toString().substring(0, 8);
+    
+                                String receiverTrans = "Received "+String.valueOf(amount)+"from "+senderName;
+                                String senderTrans = "Sent "+String.valueOf(amount)+" to "+receiverName;
+    
+                                // writing the new balance for sender and receiver
+                                receiverRow.getCell(6).setCellValue(receiverAmount);
+                                senderRow.getCell(6).setCellValue(senderAmount);
+    
+                                // writng the last trasaction 
+                                senderRow.getCell(8).setCellValue(senderLastTrans);
+                                receiverRow.getCell(8).setCellValue(receiverLastTrans);
+    
+                                // writing the time of transaction to both sender and receiver rows
+                                receiverRow.getCell(9).setCellValue(TransactionTime);
+                                senderRow.getCell(9).setCellValue(TransactionTime);
+    
+                                // writing the transaction detail to bother sender and receiver rows
+                                receiverRow.getCell(10).setCellValue(receiverTrans);
+                                senderRow.getCell(10).setCellValue(senderTrans);    
+    
+                            }
+                            else{
+                                alertMsg.setText("Receiver NotFound");
+                            }
                         }
+                    
                     }
                 }
-                    
             }
+            else {
+                JOptionPane.showMessageDialog(this, "Sheet Not Found", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
             try (FileOutputStream fileOut = new FileOutputStream("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx")) {
                 workbk.write(fileOut);
                 workbk.close();

@@ -8,14 +8,15 @@ public class AccountDetail extends JFrame implements ActionListener{
 
     private JLabel bankName, bankAddress;
     private JLabel UserName, Account_No, Mobile_No, Email, Account_Balance, AccountType, LastTransTO;
-    private JLabel name_, email_, mobileNo_, accountNo_, accountBal_, accType_, lastTrans_;
+    private JLabel name_, email_, mobileNo_, accountNo_, accountBal_, accType_, lastTrans_, lastTransTime_;
     private JButton logout, transferMoney;
-    String accNumber;
+    String accNumber,balance;
+    int rowNum;
 
-
-    AccountDetail(String Name, String accNumber, String MobileNo, String emailId, String accType, String balance, String lastTrans, String lastTransDetails) {
+    AccountDetail(String Name, String accNumber, String MobileNo, String emailId, String accType, String balance, String lastTrans, String lastTransTime, String lastTransDetails, int rowNum) {
         this.accNumber = accNumber;
-
+        this.balance = balance;
+        this.rowNum = rowNum;
 
         bankName = new JLabel("Bank of Chittoor");
         bankName.setForeground(Color.WHITE);
@@ -116,20 +117,27 @@ public class AccountDetail extends JFrame implements ActionListener{
         add(LastTransTO);
 
 
-        String lastTransDetail = lastTrans+" "+lastTransDetails;
-        lastTrans_ = new JLabel(lastTransDetail);
+
+
+        lastTrans_ = new JLabel(lastTransDetails);
         lastTrans_.setForeground(Color.RED);
         lastTrans_.setFont(new Font("Arial", Font.ITALIC, 23));
-        lastTrans_.setBounds(630, 390, 500, 30);
+        lastTrans_.setBounds(630, 390, 300, 30);
         add(lastTrans_);
-
+         
+        
+        lastTransTime_ = new JLabel(lastTransTime);
+        lastTransTime_.setForeground(Color.RED);
+        lastTransTime_.setFont(new Font("Arial", Font.ITALIC, 23));
+        lastTransTime_.setBounds(630, 400, 500, 50);
+        add(lastTransTime_);
 
         logout = new JButton("Logout");
         logout.setForeground(Color.WHITE);
         logout.setBackground(Color.RED);
         logout.setBorder(null);
         logout.addActionListener(this);
-        logout.setBounds(600, 520, 100, 40);
+        logout.setBounds(600, 550, 100, 40);
         add(logout);
 
 
@@ -139,7 +147,7 @@ public class AccountDetail extends JFrame implements ActionListener{
         transferMoney.setBackground(Color.red);
         transferMoney.setBorder(null);
         transferMoney.addActionListener(this);
-        transferMoney.setBounds(610, 450, 80, 40);
+        transferMoney.setBounds(610, 480, 80, 40);
         add(transferMoney);
 
 
@@ -169,7 +177,8 @@ public class AccountDetail extends JFrame implements ActionListener{
 
             }
             else if(ae.getSource() == transferMoney) {
-                new TransactionSection(accNumber);
+                new TransactionSection(accNumber, balance, rowNum);
+                dispose();
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

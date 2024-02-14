@@ -45,6 +45,7 @@ class ApplicationForm extends JFrame implements ActionListener{
 
         nameInput = new JTextField();
         nameInput.setBounds(665, 150, 325, 30);
+        nameInput.setFont(new Font("Arial", Font.PLAIN, 20));
         add(nameInput);
 
 
@@ -101,10 +102,10 @@ class ApplicationForm extends JFrame implements ActionListener{
         add(InitialDepositeInput);
 
         // Section to create password for further Login
-        password = new JLabel("Create Password");
+        password = new JLabel("Create Password: ");
         password.setForeground(Color.WHITE);
         password.setFont(new Font("Arial", Font.PLAIN, 28));
-        password.setBounds(470, 400, 200, 30);
+        password.setBounds(440, 400, 300, 30);
         add(password);
 
         passwordInput = new JTextField();
@@ -165,8 +166,8 @@ class ApplicationForm extends JFrame implements ActionListener{
         try {
             if(ae.getSource() == Submit) {
                 String Name_ = nameInput.getText().toString();
-                String MobileNo_ = MobileInput.getText().toString();
-                String Email_ = EmailInput.getText().toString();
+                String MobileNo_ = "+91-"+MobileInput.getText().toString();
+                String Email_ = EmailInput.getText().toString().toLowerCase();
                 String InitialDeposite_ =InitialDepositeInput.getText().toString();
                 String Password = passwordInput.getText().toString();
                 nameInput.setText("");
@@ -227,8 +228,10 @@ class ApplicationForm extends JFrame implements ActionListener{
             FileInputStream excel = new FileInputStream(excelFile);
             workbk = new XSSFWorkbook(excel);
             sheet = workbk.getSheet("Sheet1");
+            String time = LocalTime.now().toString();
+            String TransDetail = "+"+initialDeposite+" Initial Deposite on";
+            String timeDate = (LocalDate.now()).toString()+" at "+time.substring(0, 8);
 
-            String timeDate = (LocalDate.now()).toString() + "  " +LocalTime.now().toString();
             String lastTrans = "+ " +initialDeposite ;
             int rowIndex = sheet.getLastRowNum()+1;
             
@@ -243,6 +246,8 @@ class ApplicationForm extends JFrame implements ActionListener{
             headerRow.createCell(7).setCellValue(initialDeposite);
             headerRow.createCell(8).setCellValue(lastTrans);
             headerRow.createCell(9).setCellValue(timeDate);
+            headerRow.createCell(10).setCellValue(TransDetail);
+
 
             try (FileOutputStream fileOut = new FileOutputStream("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx")) {
                 workbk.write(fileOut);

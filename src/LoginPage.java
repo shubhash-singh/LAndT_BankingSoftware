@@ -44,6 +44,7 @@ class LoginPage extends JFrame implements ActionListener{
 
         accountNoInput = new JTextField(16);
         accountNoInput.setBounds(660, 150, 325, 30);
+        accountNoInput.setFont(new Font("Arial", Font.PLAIN, 20));
         add(accountNoInput);
 
         password = new JLabel("Password:");
@@ -55,10 +56,11 @@ class LoginPage extends JFrame implements ActionListener{
 
         passwordInput = new JPasswordField(24);
         passwordInput.setBounds(660, 200, 325, 30);
+        passwordInput.setFont(new Font("Arial", Font.PLAIN, 20));
         add(passwordInput);
 
 
-        alertMsg = new JLabel(" ");
+        alertMsg = new JLabel("");
         alertMsg.setFont(new Font("Monotype Corsiva", Font.ITALIC, 16));
         alertMsg.setForeground(Color.RED);
         alertMsg.setBounds(650, 250, 300, 30);
@@ -113,7 +115,7 @@ class LoginPage extends JFrame implements ActionListener{
 
             else if (ae.getSource() == logIn)
             {
-                String id = accountNoInput.getText().toString();
+                String id = accountNoInput.getText().toString().toLowerCase();
                 char[] passwordChars = passwordInput.getPassword();
                 String Password = String.valueOf(passwordChars);
                 
@@ -145,14 +147,12 @@ class LoginPage extends JFrame implements ActionListener{
             FileInputStream excel = new FileInputStream(excelFile);
             workbk = new XSSFWorkbook(excel);
             sheet = workbk.getSheet("Sheet1");
-
-            // String Name = (sheet.getRow(3).getCell(3)).toString();
-            // alertMsg.setText(Name);
+            
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 EmailId = sheet.getRow(i).getCell(3).toString();
                 password = sheet.getRow(i).getCell(4).toString();
     
-                if (EmailId.equals(Id) && password.equals(Password)) {
+                if (EmailId.equalsIgnoreCase(Id) && password.equals(Password)) {
                     String Name = sheet.getRow(i).getCell(0).toString();
                     String accNumber = sheet.getRow(i).getCell(1).toString();
                     String MobileNo = sheet.getRow(i).getCell(2).toString();
@@ -160,14 +160,23 @@ class LoginPage extends JFrame implements ActionListener{
                     String accType = sheet.getRow(i).getCell(5).toString();
                     String balance = sheet.getRow(i).getCell(6).toString();
                     String lastTrans = sheet.getRow(i).getCell(8).toString();
-                    String lastTransDetails = sheet.getRow(i).getCell(9).toString();
+                    String lastTrnasTime = sheet.getRow(i).getCell(9).toString();
+                    String lastTransDetails = sheet.getRow(i).getCell(10).toString();
 
                     
-                    new AccountDetail(Name, accNumber, MobileNo, emailId, accType, balance, lastTrans, lastTransDetails);
+
+                    int rowNumber = i;
+                    new AccountDetail(Name, accNumber, MobileNo, emailId, accType, balance, lastTrans, lastTrnasTime,lastTransDetails, rowNumber);
                     workbk.close();
                     dispose();
                     
                     break;
+                }
+                else if(EmailId.equals(Id) && !password.equals(Password)){
+                    alertMsg.setText("Incorrect Password");
+                }
+                else {
+                    alertMsg.setText("Account not found Create new Account");
                 }
             }
            
