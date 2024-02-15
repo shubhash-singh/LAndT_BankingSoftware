@@ -137,8 +137,9 @@ class LoginPage extends JFrame implements ActionListener{
     
     public void LoginConfirmation(String Id, String Password){
 
-        XSSFWorkbook workbk;
-        XSSFSheet sheet;
+        XSSFWorkbook workbk = null;
+        XSSFSheet sheet = null;
+
         File excelFile = new File("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx");
         String EmailId, password;
 
@@ -162,28 +163,37 @@ class LoginPage extends JFrame implements ActionListener{
                     String lastTrans = sheet.getRow(i).getCell(8).toString();
                     String lastTrnasTime = sheet.getRow(i).getCell(9).toString();
                     String lastTransDetails = sheet.getRow(i).getCell(10).toString();
-                    workbk.close();
+                    String Password_ = sheet.getRow(i).getCell(4).toString();
                     
 
                     int rowNumber = i;
-                    new AccountDetail(Name, accNumber, MobileNo, emailId, accType, balance, lastTrans, lastTrnasTime,lastTransDetails, rowNumber);
+                    new AccountDetail(Name, accNumber, MobileNo, emailId, accType, balance, lastTrans, lastTrnasTime,lastTransDetails, rowNumber, Password_);
                     dispose();
                     
                     break;
                 }
                 else if(EmailId.equals(Id) && !password.equals(Password)){
                     alertMsg.setText("Incorrect Password");
-                    workbk.close();
+                   
                 }
                 else {
                     alertMsg.setText("Account not found Create new Account");
-                    workbk.close();
+                    
                 }
             }
            
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        finally {
+            try {
+                if (workbk != null) {
+                    workbk.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception appropriately
+            }
         }
     }
     public static void main(String[] args) {

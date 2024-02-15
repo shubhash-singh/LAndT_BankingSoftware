@@ -9,11 +9,11 @@ public class AccountDetail extends JFrame implements ActionListener{
     private JLabel bankName, bankAddress;
     private JLabel UserName, Account_No, Mobile_No, Email, Account_Balance, AccountType, LastTransTO;
     private JLabel name_, email_, mobileNo_, accountNo_, accountBal_, accType_, lastTrans_, lastTransTime_;
-    private JButton logout, transferMoney;
-    String accNumber,balance;
+    private JButton logout, transferMoney, deposite;
+    String accNumber,balance, Password;
     int rowNum;
 
-    AccountDetail(String Name, String accNumber, String MobileNo, String emailId, String accType, String balance, String lastTrans, String lastTransTime, String lastTransDetails, int rowNum) {
+    AccountDetail(String Name, String accNumber, String MobileNo, String emailId, String accType, String balance, String lastTrans, String lastTransTime, String lastTransDetails, int rowNum, String Password) {
         this.accNumber = accNumber;
         this.balance = balance;
         this.rowNum = rowNum;
@@ -137,18 +137,26 @@ public class AccountDetail extends JFrame implements ActionListener{
         logout.setBackground(Color.RED);
         logout.setBorder(null);
         logout.addActionListener(this);
-        logout.setBounds(600, 550, 100, 40);
+        logout.setBounds(630, 550, 100, 40);
         add(logout);
 
 
-        transferMoney = new JButton();
         transferMoney = new JButton("Pay");
         transferMoney.setForeground(Color.WHITE);
         transferMoney.setBackground(Color.red);
         transferMoney.setBorder(null);
         transferMoney.addActionListener(this);
-        transferMoney.setBounds(610, 480, 80, 40);
+        transferMoney.setBounds(600, 480, 80, 40);
         add(transferMoney);
+
+        deposite = new JButton();
+        deposite = new JButton("Deposite");
+        deposite.setForeground(Color.WHITE);
+        deposite.setBackground(Color.red);
+        deposite.setBorder(null);
+        deposite.addActionListener(this);
+        deposite.setBounds(700, 480, 80, 40);
+        add(deposite);
 
 
         ImageIcon backgroundImage = new ImageIcon("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/Images/Login_BackGround2.jpg");
@@ -180,11 +188,12 @@ public class AccountDetail extends JFrame implements ActionListener{
                 new TransactionSection(accNumber, balance, rowNum);
                 dispose();
             }
+            else if(ae.getSource() == deposite) {
+                new DepositePage(rowNum, Password);
+                dispose();
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    public static void main(String[] args) {
-        
     }
 }

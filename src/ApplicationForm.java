@@ -228,6 +228,8 @@ class ApplicationForm extends JFrame implements ActionListener{
             FileInputStream excel = new FileInputStream(excelFile);
             workbk = new XSSFWorkbook(excel);
             sheet = workbk.getSheet("Sheet1");
+
+
             String time = LocalTime.now().toString();
             String TransDetail = "+"+initialDeposite+" Initial Deposite on";
             String timeDate = (LocalDate.now()).toString()+" at "+time.substring(0, 8);
@@ -252,7 +254,7 @@ class ApplicationForm extends JFrame implements ActionListener{
             try (FileOutputStream fileOut = new FileOutputStream("/media/ragnar/ca023da0-2328-4858-8f08-a69753e22717/Projects/L-T_BankingSoftware/src/Data/UserDetail.xlsx")) {
                 workbk.write(fileOut);
                 workbk.close();
-
+                fileOut.close();
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error writing to Excel file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
