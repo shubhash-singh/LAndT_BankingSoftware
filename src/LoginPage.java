@@ -121,7 +121,7 @@ class LoginPage extends JFrame implements ActionListener{
                 
 
                 if(id.isBlank() || Password.isBlank() ) {
-                    alertMsg.setText("Email or Username can't be Empty");
+                    alertMsg.setText("Email/Password can't be Empty");
 
                 }
                 else {
@@ -162,21 +162,22 @@ class LoginPage extends JFrame implements ActionListener{
                     String lastTrans = sheet.getRow(i).getCell(8).toString();
                     String lastTrnasTime = sheet.getRow(i).getCell(9).toString();
                     String lastTransDetails = sheet.getRow(i).getCell(10).toString();
-
+                    workbk.close();
                     
 
                     int rowNumber = i;
                     new AccountDetail(Name, accNumber, MobileNo, emailId, accType, balance, lastTrans, lastTrnasTime,lastTransDetails, rowNumber);
-                    workbk.close();
                     dispose();
                     
                     break;
                 }
                 else if(EmailId.equals(Id) && !password.equals(Password)){
                     alertMsg.setText("Incorrect Password");
+                    workbk.close();
                 }
                 else {
                     alertMsg.setText("Account not found Create new Account");
+                    workbk.close();
                 }
             }
            
