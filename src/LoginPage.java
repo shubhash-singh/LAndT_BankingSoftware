@@ -165,9 +165,9 @@ class LoginPage extends JFrame implements ActionListener{
                     String lastTransDetails = sheet.getRow(i).getCell(10).toString();
                     String Password_ = sheet.getRow(i).getCell(4).toString();
                     
-
+                    String finalBalance = balance.substring(0,balance.length()-2);
                     int rowNumber = i;
-                    new AccountDetail(Name, accNumber, MobileNo, emailId, accType, balance, lastTrans, lastTrnasTime,lastTransDetails, rowNumber, Password_);
+                    new AccountDetail(Name, accNumber, MobileNo, emailId, accType, finalBalance, lastTrans, lastTrnasTime,lastTransDetails, rowNumber, Password_);
                     dispose();
                     
                     break;

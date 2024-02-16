@@ -154,7 +154,7 @@ public class DepositePage extends JFrame implements ActionListener{
                 JOptionPane.showMessageDialog(this, "Error writing to Excel file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-            JOptionPane.showMessageDialog(this, String.valueOf(amount)+" Deposited successfully! \nNew Balance is "+String.valueOf(newBalance), "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, String.valueOf(amount)+" Deposited successfully! \nNew Balance is "+String.valueOf(newBalance), "Deposited", JOptionPane.ERROR_MESSAGE);
             alertMsg.setText(" ");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

@@ -17,7 +17,7 @@ public class TransactionSection extends JFrame implements ActionListener{
     String accNumber;
     int balance, rowNum;
     
-    TransactionSection(String accNumber, String balance, int rowNum) {
+    TransactionSection(String accNumber,String balance, int rowNum) {
 
         this.accNumber = accNumber;
         this.balance = Integer.parseInt(balance);
@@ -112,9 +112,6 @@ public class TransactionSection extends JFrame implements ActionListener{
                 else if (payAmount > 100000) {
                     alertMsg.setText("Amount is too big.");
                 }
-                else if(payAmount > balance){
-                    alertMsg.setText("Insufficient Balance");
-                }
                 else if (userId.isBlank() || payAmount ==0) {
                     alertMsg.setText("None of the fields can be empty");
                 }
@@ -146,62 +143,66 @@ public class TransactionSection extends JFrame implements ActionListener{
             FileInputStream excel = new FileInputStream(excelFile);
             workbk = new XSSFWorkbook(excel);
             sheet = workbk.getSheet("Sheet1");
-    
-            alertMsg.setText("File opened");
                
             boolean receiverFound = false;
     
             for (Row receiverRow : sheet) {
                 String cell = receiverRow.getCell(3).toString();
-    
                 // Searching for the Receiver User ID
-                if (cell.equals(userId)) {
+                if(balance <= amount){
+                    alertMsg.setText("Insufficent Balance !!!");
 
-                    Row senderRow = sheet.getRow(rowNum);
-
-                    // setting new balance for both sender and receiver
-                    double senderAmount = Double.parseDouble(senderRow.getCell(6).getStringCellValue()) - amount;
-                    double receiverAmount = Double.parseDouble(receiverRow.getCell(6).getStringCellValue()) + amount;
-
-                    // setting last Transaction for sender and receiver
-                    String senderLastTrans = "-"+String.valueOf(amount);
-                    String receiverLastTrans = "+"+String.valueOf(amount);
-
-                    String senderName = senderRow.getCell(0).getStringCellValue();
-                    String receiverName = receiverRow.getCell(0).getStringCellValue();
-
-                    String TransactionTime = " on "+LocalDate.now().toString()+" at "+LocalTime.now().toString().substring(0, 8);
-
-                    String receiverTrans = "Received "+String.valueOf(amount)+"from "+senderName;
-                    String senderTrans = "Sent "+String.valueOf(amount)+" to "+receiverName;
-
-                    // writing the new balance for sender and receiver
-                    receiverRow.getCell(6).setCellValue(String.valueOf(receiverAmount));
-                    senderRow.getCell(6).setCellValue(String.valueOf(senderAmount));
-
-                    // writng the last trasaction 
-                    receiverRow.getCell(8).setCellValue(receiverLastTrans);
-                    senderRow.getCell(8).setCellValue(senderLastTrans);
-
-                    // writing the time of transaction to both sender and receiver rows
-                    receiverRow.getCell(9).setCellValue(TransactionTime);
-                    senderRow.getCell(9).setCellValue(TransactionTime);
-
-                    // writing the transaction detail to bother sender and receiver rows
-                    receiverRow.getCell(10).setCellValue(receiverTrans);
-                    senderRow.getCell(10).setCellValue(senderTrans);
+                }
+                else {
+                    if (cell.equals(userId)) {
+                    
+                        Row senderRow = sheet.getRow(rowNum);
     
-                    try (FileOutputStream fileOut = new FileOutputStream(excelFile)) {
-                        alertMsg.setText("Writing file");
-                        workbk.write(fileOut);
-                        alertMsg.setText("Writing file successful");
-                    } catch (IOException e) {
-                        JOptionPane.showMessageDialog(this, "Error writing to Excel file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        // setting new balance for both sender and receiver
+                        double senderAmount = balance - amount;
+                        String receiverBalance = receiverRow.getCell(6).toString();
+                        double receiverAmount = Double.parseDouble(receiverBalance.substring(0, receiverBalance.length()-2)) + amount;
+    
+                        // setting last Transaction for sender and receiver
+                        String senderLastTrans = "-"+String.valueOf(amount);
+                        String receiverLastTrans = "+"+String.valueOf(amount);
+    
+                        String senderName = senderRow.getCell(0).getStringCellValue();
+                        String receiverName = receiverRow.getCell(0).getStringCellValue();
+    
+                        String TransactionTime = " on "+LocalDate.now().toString()+" at "+LocalTime.now().toString().substring(0, 8);
+    
+                        String receiverTrans = "Received "+String.valueOf(amount)+" from "+senderName;
+                        String senderTrans = "Sent "+String.valueOf(amount)+" to "+receiverName;
+    
+                        // writing the new balance for sender and receiver
+                        receiverRow.getCell(6).setCellValue(String.valueOf(receiverAmount));
+                        senderRow.getCell(6).setCellValue(String.valueOf(senderAmount));
+    
+                        // writng the last trasaction 
+                        receiverRow.getCell(8).setCellValue(receiverLastTrans);
+                        senderRow.getCell(8).setCellValue(senderLastTrans);
+    
+                        // writing the time of transaction to both sender and receiver rows
+                        receiverRow.getCell(9).setCellValue(TransactionTime);
+                        senderRow.getCell(9).setCellValue(TransactionTime);
+    
+                        // writing the transaction detail to bother sender and receiver rows
+                        receiverRow.getCell(10).setCellValue(receiverTrans);
+                        senderRow.getCell(10).setCellValue(senderTrans);
+        
+                        try (FileOutputStream fileOut = new FileOutputStream(excelFile)) {
+                            alertMsg.setText("Writing file");
+                            workbk.write(fileOut);
+                            alertMsg.setText("Writing file successful");
+                        } catch (IOException e) {
+                            JOptionPane.showMessageDialog(this, "Error writing to Excel file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+        
+                        alertMsg.setText("Sent " + amount + " to " + receiverName);
+                        receiverFound = true;
+                        break;
                     }
-    
-                    alertMsg.setText("Sent " + amount + " to " + receiverName);
-                    receiverFound = true;
-                    break;
                 }
             }
     
@@ -211,6 +212,7 @@ public class TransactionSection extends JFrame implements ActionListener{
     
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         } finally {
             try {
                 if (workbk != null) {
@@ -218,6 +220,7 @@ public class TransactionSection extends JFrame implements ActionListener{
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
             }
         }
     }
@@ -235,20 +238,20 @@ public class TransactionSection extends JFrame implements ActionListener{
             Row row = sheet.getRow(rowNum);
 
 
-            String name_ = row.getCell(0).getStringCellValue();
-            String accNum = row.getCell(1).getStringCellValue();
-            String phoneNo = row.getCell(2).getStringCellValue();
-            String emailId = row.getCell(3).getStringCellValue();
-            String accType = row.getCell(5).getStringCellValue();
-            String balance = row.getCell(6).getStringCellValue();
-            String lastTrans = row.getCell(8).getStringCellValue();
-            String lastTransTime = row.getCell(9).getStringCellValue();
-            String lastTransDetails = row.getCell(10).getStringCellValue();
-            String Password_ = row.getCell(4).getStringCellValue();
+            String name_ = row.getCell(0).toString();
+            String accNum = row.getCell(1).toString();
+            String phoneNo = row.getCell(2).toString();
+            String emailId = row.getCell(3).toString();
+            String accType = row.getCell(5).toString();
+            String balance = row.getCell(6).toString();
+            String lastTrans = row.getCell(8).toString();
+            String lastTransTime = row.getCell(9).toString();
+            String lastTransDetails = row.getCell(10).toString();
+            String Password_ = row.getCell(4).toString();
 
             workbook.close();
-
-            new AccountDetail(name_, accNum, phoneNo, emailId, accType, balance, lastTrans, lastTransTime, lastTransDetails, rowNum, Password_);
+            String finalBalance = balance.substring(0, balance.length()-2);
+            new AccountDetail(name_, accNum, phoneNo, emailId, accType, finalBalance, lastTrans, lastTransTime, lastTransDetails, rowNum, Password_);
             dispose();
 
         }catch(Exception e){
