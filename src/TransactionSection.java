@@ -155,13 +155,13 @@ public class TransactionSection extends JFrame implements ActionListener{
                 }
                 else {
                     if (cell.equals(userId)) {
-                    
+                        receiverFound = true;
                         Row senderRow = sheet.getRow(rowNum);
     
                         // setting new balance for both sender and receiver
-                        double senderAmount = balance - amount;
+                        int senderAmount = balance - amount;
                         String receiverBalance = receiverRow.getCell(6).toString();
-                        double receiverAmount = Double.parseDouble(receiverBalance.substring(0, receiverBalance.length()-2)) + amount;
+                        int receiverAmount = Integer.parseInt(receiverBalance.substring(0, receiverBalance.length()-2)) + amount;
     
                         // setting last Transaction for sender and receiver
                         String senderLastTrans = "-"+String.valueOf(amount);
@@ -200,7 +200,7 @@ public class TransactionSection extends JFrame implements ActionListener{
                         }
         
                         alertMsg.setText("Sent " + amount + " to " + receiverName);
-                        receiverFound = true;
+                        
                         break;
                     }
                 }

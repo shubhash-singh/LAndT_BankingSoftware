@@ -137,7 +137,8 @@ public class DepositePage extends JFrame implements ActionListener{
             String TransDetail = "+"+amount+" Deposite on";
             String timeDate = (LocalDate.now()).toString()+" at "+time.substring(0, 8);
 
-            int newBalance = amount + Integer.parseInt(row.getCell(6).toString());
+            String newBal = row.getCell(6).toString();
+            int newBalance = amount + Integer.parseInt(newBal.substring(0, newBal.length()-2));
             
             row.getCell(6).setCellValue(String.valueOf(newBalance));
             row.getCell(7).setCellValue(String.valueOf(amount));

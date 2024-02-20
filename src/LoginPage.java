@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class LoginPage extends JFrame implements ActionListener{
+public class LoginPage extends JFrame implements ActionListener{
     private JLabel bankName, alertMsg, bankAddress;
     private JButton logIn;
     private JButton signUp;

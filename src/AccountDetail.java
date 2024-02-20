@@ -17,6 +17,7 @@ public class AccountDetail extends JFrame implements ActionListener{
         this.accNumber = accNumber;
         this.balance = balance;
         this.rowNum = rowNum;
+        this.Password = Password;
 
         bankName = new JLabel("Bank of Chittoor");
         bankName.setForeground(Color.WHITE);
